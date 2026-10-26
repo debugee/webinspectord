@@ -1,0 +1,19 @@
+#!/bin/bash
+
+export LANG=C
+export LC_CTYPE=C
+export LC_ALL=C
+
+dpkg-deb -R $1 $2
+
+mkdir $2 2>/dev/null
+
+for i in $2/Library/MobileSubstrate/DynamicLibraries/*dylib
+do
+sed -i "" 's/\/Library\/MobileSubstrate\/DynamicLibraries/\/Library\/MobileSupported\/SupportLibraries/g' $i
+sed -i "" 's/\/Library\/Frameworks\/CydiaSubstrate.framework\/CydiaSubstrate/\/var\/Lib\/Frameworks\/MobileSupports.framework\/MobileSupports/g' $i 
+ldid2 -S $i 
+done
+rm $1
+dpkg-deb -b $2 $1
+rm -rf $2
